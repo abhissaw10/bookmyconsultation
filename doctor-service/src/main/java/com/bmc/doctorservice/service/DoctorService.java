@@ -11,6 +11,7 @@ import com.bmc.doctorservice.util.ValidationUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.ses.model.SesException;
 import springfox.documentation.annotations.Cacheable;
 
 import java.io.ByteArrayOutputStream;
@@ -115,7 +116,11 @@ public class DoctorService {
     }
 
     private void notify(Doctor doctor){
-        notificationService.notifyDoctorRegistration(doctor);
+        try {
+            notificationService.notifyDoctorRegistration(doctor);
+        }catch(SesException s){
+            log.error(s.getMessage());
+        }
     }
 
     public ByteArrayOutputStream downloadDocuments(String id, String documentId) throws IOException {

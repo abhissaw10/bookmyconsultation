@@ -10,6 +10,9 @@ services:
     environment:
       KAFKA_BOOTSTRAP_ADDRESS: kafka:9092
       SPRING_DATA_MONGODB_HOST: mongo
+      SPRING_DATA_MONGODB_DATABASE: user
+      SPRING_DATA_MONGODB_USERNAME: root
+      SPRING_DATA_MONGODB_PASSWORD: rootpassword
   doctor-service:
     build: doctor-service
     ports:
@@ -34,16 +37,31 @@ services:
     environment:
       KAFKA_BOOTSTRAP_ADDRESS: kafka:9092
       SPRING_DATA_MONGODB_HOST: mongo
+      SPRING_DATA_MONGODB_DATABASE: payment
+      SPRING_DATA_MONGODB_USERNAME: root
+      SPRING_DATA_MONGODB_PASSWORD: rootpassword
   notification-service:
     build: notification-service
     ports:
       - 8087:8087
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_BOOTSTRAP_ADDRESS: kafka:9092
+  rating-service:
+    build: rating-service
+    ports:
+      - 8084:8084
     depends_on:
       - mongo
       - kafka
     environment:
       KAFKA_BOOTSTRAP_ADDRESS: kafka:9092
       SPRING_DATA_MONGODB_HOST: mongo
+      SPRING_DATA_MONGODB_DATABASE: rating
+      SPRING_DATA_MONGODB_USERNAME: root
+      SPRING_DATA_MONGODB_PASSWORD: rootpassword
+
   bmc-gateway:
     build: bmc-gateway
     ports:
@@ -59,6 +77,9 @@ services:
     environment:
       KAFKA_BOOTSTRAP_ADDRESS: kafka:9092
       SPRING_DATA_MONGODB_HOST: mongo
+      SPRING_DATA_MONGODB_DATABASE: appointment
+      SPRING_DATA_MONGODB_USERNAME: root
+      SPRING_DATA_MONGODB_PASSWORD: rootpassword
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/compose-postgres
       SPRING_DATASOURCE_USERNAME: compose-postgres
       SPRING_DATASOURCE_PASSWORD: compose-postgres
