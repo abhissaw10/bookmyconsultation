@@ -14,8 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -74,6 +72,7 @@ public class DoctorController {
     public ResponseEntity<Doctor> approveDoctor(@PathVariable String id, @RequestBody UpdateDoctorRequest request){
         return ResponseEntity.ok(service.approve(id,request));
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/doctors/{id}/reject")
     public ResponseEntity<Doctor> rejectDoctor(@PathVariable String id, @RequestBody UpdateDoctorRequest request){

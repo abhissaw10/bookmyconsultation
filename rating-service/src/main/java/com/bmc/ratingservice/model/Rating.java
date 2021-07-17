@@ -12,4 +12,5 @@ public class Rating {
     private String id;
     private String doctorId;
     private Integer rating;
+    private String comments;
 }
