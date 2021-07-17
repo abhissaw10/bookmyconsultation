@@ -5,6 +5,7 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ses.SesClient;
+import software.amazon.awssdk.services.ses.model.SesException;
 
 import javax.annotation.PostConstruct;
 
@@ -25,7 +26,7 @@ public class SeSEmailVerification {
             .build();
     }
 
-    public void sendVerificationEmail(String emailId){
+    public void sendVerificationEmail(String emailId) throws SesException {
         sesClient.verifyEmailAddress(req->req.emailAddress(emailId));
     }
 }

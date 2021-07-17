@@ -28,7 +28,6 @@ public class UserService {
         ValidationUtils.validate(user);
         user.setId(UUID.randomUUID().toString());
         user.setCreatedDate(LocalDate.now().toString());
-
         userRepository.save(user);
         notify(user);
         return user;

@@ -1,5 +1,6 @@
 package com.bmc.appointmentservice.service;
 
+import com.bmc.appointmentservice.exception.AvailabilityUnAvailableException;
 import com.bmc.appointmentservice.model.Availability;
 import com.bmc.appointmentservice.repository.DoctorAvailabilityRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,10 @@ public class DoctorAvailabilityService {
 
     private final DoctorAvailabilityRepository repository;
 
-    public void saveDoctorAvailability(Availability availability){
+    public void saveDoctorAvailability(Availability availability) throws AvailabilityUnAvailableException{
+        if(availability.getAvailabilityMap()==null || availability.getAvailabilityMap().isEmpty()){
+            throw new AvailabilityUnAvailableException();
+        }
         List<com.bmc.appointmentservice.entity.Availability> availabilityList = new ArrayList<>();
         List<com.bmc.appointmentservice.entity.Availability> existingAvailabilities = repository.findByDoctorIdAndAvailabilityDateIn(availability.getDoctorId(),availability.getAvailabilityMap().keySet().stream().collect(Collectors.toList()));
         repository.deleteAll(existingAvailabilities);//Deleting the existing availabilities for the dates

@@ -7,6 +7,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.services.ses.model.SesException;
 
 @Service
 @Log4j2
@@ -23,7 +24,12 @@ public class NotificationService {
 
     public void notifyUser(User user){
         log.info(user);
-        producer.send(new ProducerRecord<>(userRegistrationTopic,null,user));
-        emailVerification.sendVerificationEmail(user.getEmailId());
+
+        try {
+            producer.send(new ProducerRecord<>(userRegistrationTopic,null,user));
+            emailVerification.sendVerificationEmail(user.getEmailId());
+        }catch(Exception e){
+            log.error(e.getMessage());
+        }
     }
 }
