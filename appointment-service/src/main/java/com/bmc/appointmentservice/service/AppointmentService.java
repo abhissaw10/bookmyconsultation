@@ -68,7 +68,7 @@ public class AppointmentService {
 
     public void prescription(Prescription prescription) throws PaymentPendingException{
         prescription.setId(UUID.randomUUID().toString());
-        if(appointmentRepository.getById(prescription.getAppointmentId()).getStatus().equals(AppointmentStatus.Confirmed)) {
+        if(appointmentRepository.getById(prescription.getAppointmentId()).getStatus().equals(AppointmentStatus.Confirmed.name())) {
             prescriptionRepository.save(prescription);
             notify(prescription);
         }else{

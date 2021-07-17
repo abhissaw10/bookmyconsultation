@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class User {
 
     private String id;
-    private String firstLame;
+    private String firstName;
     private String lastName;
     private String dob;
     private String mobile;
