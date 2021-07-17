@@ -1,9 +1,11 @@
 package com.bmc.appointmentservice.service;
 
 import com.bmc.appointmentservice.entity.Availability;
+import com.bmc.appointmentservice.exception.PaymentPendingException;
 import com.bmc.appointmentservice.exception.ResourceUnAvailableException;
 import com.bmc.appointmentservice.exception.SlotUnavailableException;
 import com.bmc.appointmentservice.model.Appointment;
+import com.bmc.appointmentservice.model.AppointmentStatus;
 import com.bmc.appointmentservice.model.Prescription;
 import com.bmc.appointmentservice.model.User;
 import com.bmc.appointmentservice.repository.AppointmentRepository;
@@ -64,10 +66,14 @@ public class AppointmentService {
         return appointment.getAppointmentId();
     }
 
-    public void prescription(Prescription prescription){
+    public void prescription(Prescription prescription) throws PaymentPendingException{
         prescription.setId(UUID.randomUUID().toString());
-        prescriptionRepository.save(prescription);
-        notify(prescription);
+        if(appointmentRepository.getById(prescription.getAppointmentId()).getStatus().equals(AppointmentStatus.Confirmed)) {
+            prescriptionRepository.save(prescription);
+            notify(prescription);
+        }else{
+            throw new PaymentPendingException();
+        }
     }
 
     private void notify(Appointment appointment){

@@ -1,6 +1,7 @@
 package com.bmc.appointmentservice.controller;
 
 import brave.Response;
+import com.bmc.appointmentservice.exception.PaymentPendingException;
 import com.bmc.appointmentservice.exception.SlotUnavailableException;
 import com.bmc.appointmentservice.model.Appointment;
 import com.bmc.appointmentservice.model.Prescription;
@@ -29,7 +30,7 @@ public class AppointmentController {
     }
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/prescriptions")
-    public ResponseEntity prescription(@RequestBody Prescription prescription){
+    public ResponseEntity prescription(@RequestBody Prescription prescription) throws PaymentPendingException {
         appointmentService.prescription(prescription);
         return ResponseEntity.ok().build();
     }
