@@ -118,7 +118,7 @@ public class DoctorService {
     private void notify(Doctor doctor){
         try {
             notificationService.notifyDoctorRegistration(doctor);
-        }catch(SesException s){
+        }catch(Exception s){
             log.error(s.getMessage());
         }
     }
