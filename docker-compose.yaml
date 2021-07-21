@@ -73,23 +73,37 @@ services:
     depends_on:
       - mongo
       - kafka
-      - db
+      - mysql
     environment:
       KAFKA_BOOTSTRAP_ADDRESS: kafka:9092
       SPRING_DATA_MONGODB_HOST: mongo
       SPRING_DATA_MONGODB_DATABASE: appointment
       SPRING_DATA_MONGODB_USERNAME: root
       SPRING_DATA_MONGODB_PASSWORD: rootpassword
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/compose-postgres
-      SPRING_DATASOURCE_USERNAME: compose-postgres
-      SPRING_DATASOURCE_PASSWORD: compose-postgres
+      #SPRING_DATASOURCE_URL: jdbc:postgresql://mysql:5432/compose-postgres
+      #SPRING_DATASOURCE_USERNAME: compose-postgres
+      #SPRING_DATASOURCE_PASSWORD: compose-postgres
+
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/appointment
+      SPRING_DATASOURCE_USERNAME: appointment
+      SPRING_DATASOURCE_PASSWORD: appointment
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL5InnoDBDialect
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
 
-  db:
-    image: 'postgres:13.1-alpine'
+  mysql:
+    image: mysql
+    restart: always
     environment:
-      - POSTGRES_USER=compose-postgres
-      - POSTGRES_PASSWORD=compose-postgres
+      #MYSQL_RANDOM_ROOT_PASSWORD: "true"
+      #MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+      #MYSQL_ROOT_PASSWORD: example
+      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_DATABASE: appointment
+      MYSQL_USER: appointment
+      MYSQL_PASSWORD: appointment
+    volumes:
+      - my-db:/var/lib/mysql
+
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:
@@ -124,3 +138,4 @@ services:
 volumes:
   mongodb_data_container:  {}
   db_data: {}
+  my-db: {}

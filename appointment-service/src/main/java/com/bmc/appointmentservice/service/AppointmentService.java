@@ -11,6 +11,7 @@ import com.bmc.appointmentservice.model.User;
 import com.bmc.appointmentservice.repository.AppointmentRepository;
 import com.bmc.appointmentservice.repository.PrescriptionRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 import static com.bmc.appointmentservice.model.AppointmentStatus.PendingPayment;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class AppointmentService {
@@ -78,25 +80,33 @@ public class AppointmentService {
 
     private void notify(Appointment appointment){
         User user = getUser(appointment.getUserId());
-        appointment.setUserEmailId(user.getEmailId());
-        appointment.setUserName(user.getFirstName() + " "+user.getLastName());
-        notificationService.notifyAppointmentConfirmation(appointment);
+        if(user!=null) {
+            appointment.setUserEmailId(user.getEmailId());
+            appointment.setUserName(user.getFirstName() + " " + user.getLastName());
+            notificationService.notifyAppointmentConfirmation(appointment);
+        }
+
     }
 
     private void notify(Prescription prescription){
         User user = getUser(prescription.getUserId());
-        prescription.setUserEmailId(user.getEmailId());
-        prescription.setPatientName(user.getFirstName() + user.getLastName());
-        notificationService.notifyPrescription(prescription);
+        if(user!=null) {
+            prescription.setUserEmailId(user.getEmailId());
+            prescription.setPatientName(user.getFirstName() + user.getLastName());
+            notificationService.notifyPrescription(prescription);
+        }
     }
 
     private User getUser(String userId){
         ResponseEntity<User> userEntity = userClient.getUser(getAuthorizationToken(),userId);
-        return  userEntity.getBody();
+        if(userEntity!=null && userEntity.getStatusCode().is2xxSuccessful()){
+            return userEntity.getBody();
+        }
+        log.error("User Not Found having Id "+userId);
+        return null;
     }
 
     private String getAuthorizationToken() {
-        String token = null;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getCredentials().toString();
     }

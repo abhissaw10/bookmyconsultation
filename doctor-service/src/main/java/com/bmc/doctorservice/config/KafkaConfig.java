@@ -36,6 +36,7 @@ public class KafkaConfig {
 
     @Bean
     public ProducerFactory<String, Doctor> producerFactory(){
+
         return new DefaultKafkaProducerFactory<>(getConfig());
     }
 
