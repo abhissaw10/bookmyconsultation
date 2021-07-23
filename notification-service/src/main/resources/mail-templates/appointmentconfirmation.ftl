@@ -5,7 +5,7 @@
 </head>
 <body>
 <p>Hi ${appointment.userName}</p>
-<p>Your appointment with doctor ${appointment.doctorName} is confirmed for the date  ${appointment.appointmentDate} from ${appointment.timeSlot}</p>
+<p>Your appointment with doctor ${appointment.firstName} ${appointment.lastName} is confirmed for the date  ${appointment.appointmentDate} from ${appointment.timeSlot}</p>
 
 <p>Regards,</p>
 <p>

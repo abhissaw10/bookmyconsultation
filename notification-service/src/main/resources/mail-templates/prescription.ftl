@@ -51,7 +51,7 @@
 
 <p>Regards,</p>
 <p>
-    <em>${prescription.doctorName} at BookMyConsultation</em> <br />
+    <em>${prescription.firstName} ${prescription.lastName} at BookMyConsultation</em> <br />
 </p>
 </body>
 </html>

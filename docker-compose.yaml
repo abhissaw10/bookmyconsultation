@@ -105,44 +105,25 @@ services:
       - my-db:/var/lib/mysql
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:6.2.0
-    hostname: zookeeper
-    container_name: zookeeper
+    image: 'bitnami/zookeeper:latest'
+    volumes:
+      - "zookeeper_data:/bitnami"
     ports:
       - "2181:2181"
     environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
+      - ALLOW_ANONYMOUS_LOGIN=yes
 
   kafka:
-    image: confluentinc/cp-server:6.2.0
-    hostname: kafka
-    container_name: kafka
+    image: 'bitnami/kafka:latest'
     depends_on:
       - zookeeper
     ports:
       - "9092:9092"
-      - "9101:9101"
+    volumes:
+      - "kafka_data:/bitnami"
     environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      KAFKA_ADVERTISED_HOST_NAME: docker.for.mac.localhost
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://docker.for.mac.localhost:9092,PLAINTEXT_HOST://localhost:29092
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_JMX_PORT: 9101
-      KAFKA_JMX_HOSTNAME: localhost
-      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka:29092
-      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
-      CONFLUENT_METRICS_ENABLE: 'true'
-      CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
 
   mongo:
     image: mongo
@@ -158,3 +139,7 @@ volumes:
   mongodb_data_container:  {}
   db_data: {}
   my-db: {}
+  zookeeper_data:
+    driver: local
+  kafka_data:
+    driver: local

@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-<p>Hi Dr ${doctor.doctorName}</p>
+<p>Hi Dr ${doctor.firstName} ${doctor.lastName}</p>
 <p>We regret to info you that your Registration with BookMyConsultation has been rejected.</p>
 <p>Please get in touch with us if you wish to learn more.</p>
 

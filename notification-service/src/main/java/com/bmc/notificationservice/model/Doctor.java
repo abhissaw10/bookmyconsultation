@@ -12,7 +12,8 @@ import lombok.NoArgsConstructor;
 public class Doctor {
 
     private String id;
-    private String doctorName;
+    private String firstName;
+    private String lastName;
     private String emailId;
     private String speciality;
     //TODO update the data type of dob
